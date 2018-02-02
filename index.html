@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Clock</title>
+    <style>
+        *{
+            margin:0;
+            padding:0;
+        }
+        html,body{
+            height:100%;
+            overflow: hidden;
+            background: gray;
+            position: relative;
+        }
+        #canvas{
+            position: absolute;
+            left:50%;
+            top:50%;
+            transform: translate3d(-50%,-50%,0);
+            background: #eee;
+        }
+    </style>
+
+</head>
+<body>
+<canvas id="canvas" width="400px" height="400px"></canvas>
+<script type="text/javascript">
+  window.onload=function () {
+      //a:获取画布
+      var canvas = document.querySelector("#canvas");
+      //b:先判断是否有画笔
+      if(canvas.getContext){
+          var ctx = canvas.getContext("2d");
+          //c:创建样式栈
+          //设置定时器每秒动一下
+          setInterval(function () {
+              ctx.clearRect(0,0,canvas.width,canvas.height);
+              move()
+          },1000);
+          move();
+          function move() {
+              ctx.save();
+              //1.先把原点 移到中心点的位置
+              ctx.translate(200,200);
+              //2.逆时针旋转90deg   绕着圆心位置旋转（center center 0）
+              ctx.rotate(-90*Math.PI/180);
+              //3.定义线段的宽度
+              ctx.lineWidth=8;
+              //4.定义描边的颜色
+              ctx.strokeStyle="black";
+              //5.定义线段两端的样式
+              ctx.lineCap="round";
+              //d:新建路径
+              ctx.beginPath();
+
+              //1.画外部空心圆
+              ctx.save();
+              ctx.strokeStyle="#325FA2";
+              ctx.lineWidth=14;
+              ctx.beginPath();
+              ctx.arc(0,0,140,0,360*Math.PI/180);
+              ctx.stroke();
+              ctx.restore();
+              //2.画时针刻度
+              ctx.save();
+              //1.画12个刻度 for循环
+              for(var i=0;i<12;i++){
+                  ctx.rotate(30*Math.PI/180);
+                  ctx.beginPath();
+                  ctx.moveTo(100,0);
+                  ctx.lineTo(120,0);
+                  ctx.stroke();
+              }
+              ctx.restore();
+              //3.画分针的刻度
+              ctx.save();
+              //for循环遍历出所有的分针
+              ctx.lineWidth=4;
+              for(var i = 0 ;i<60 ; i++){
+                  ctx.rotate(6*Math.PI/180);
+                  if((i+1)%5 != 0){
+                      ctx.beginPath();
+                      ctx.moveTo(117,0);
+                      ctx.lineTo(120,0);
+                      ctx.stroke();
+                  }
+              }
+              ctx.restore();
+
+              var date = new Date();
+              var s = date.getSeconds();
+              var m = date.getMinutes()+s/60;
+              var h = date.getHours()+m/60;
+              //4.时针
+              ctx.save();
+              ctx.lineWidth=14;
+              h =h>12? h-12:h;
+              ctx.rotate(h*30*Math.PI/180);
+              ctx.beginPath();
+              ctx.moveTo(-20,0);
+              ctx.lineTo(80,0);
+              ctx.stroke();
+              ctx.restore();
+              //5.分针
+              ctx.save();
+              ctx.lineWidth=10;
+              ctx.rotate(m*6*Math.PI/180);
+              ctx.beginPath();
+              ctx.moveTo(-28,0);
+              ctx.lineTo(112,0);
+              ctx.stroke();
+              ctx.restore();
+              //6.秒针
+              ctx.save();
+              ctx.rotate(s*6*Math.PI/180);
+              ctx.lineWidth=6;
+              ctx.strokeStyle="#D40000";
+              ctx.fillStyle="#D40000";
+              ctx.beginPath();
+              ctx.moveTo(-30,0);
+              ctx.lineTo(83,0);
+              ctx.stroke();
+              ctx.beginPath();
+              ctx.arc(0,0,10,0,360*Math.PI/180);
+              ctx.fill();
+              ctx.beginPath();
+              ctx.arc(96,0,10,0,360*Math.PI/180);
+              ctx.stroke();
+              ctx.restore();
+              //e:弹到顶端
+              ctx.restore();
+
+          }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      }
+  }
+</script>
+</body>
+</html>
